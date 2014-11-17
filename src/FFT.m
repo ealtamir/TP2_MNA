@@ -3,7 +3,7 @@
 function result = fastFourierTransformDivAndConq(Y)
     result = [];
     X = addPadding(Y);
-    N = size(X)(1);
+    N = length(X);
 
     even = @(x) 2 * x;
     odd = @(x) 2 * x + 1;
@@ -31,7 +31,7 @@ function val = divide(X, k, N, step)
 end
 
 function X = addPadding(Y)
-    N = size(Y);
+    N = length(Y);
     if isPowerOf2(N)
         X = Y;
     else
