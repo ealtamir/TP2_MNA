@@ -4,7 +4,7 @@ autoload("compressWav", "compression.m");
 autoload("loadWav", "wav_loader.m");
 autoload("writeWav", "wav_loader.m");
 
-function processWav(name, L)
+function X = processWav(name, L)
     [Y, fs, bps] = loadWav(name);
     X = compressWav(Y, L);
     X = addFrequencies(X);
@@ -13,6 +13,8 @@ function processWav(name, L)
 end
 
 function X = addFrequencies(X)
-    vectorHalf = flipud(X(1:end-1));
-    X = [X; vectorHalf];
+    N = length(X);
+    for j = 1:N
+        X(N + j) = conj(X(j));
+    end
 end
