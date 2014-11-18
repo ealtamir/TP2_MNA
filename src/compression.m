@@ -43,47 +43,30 @@ function compressed = quantize(X, C)
     imgPart = imag(X);
     for j = 1:length(X)
         # Cuantización de la parte real e imaginaria.
-        realDone = false;
-        imgDone = false;
-        for k = 1:length(C)
-            if (!realDone && realPart(j) <= C(k, 1))
-                realPart(j) = C(k, 1);
-                realDone = true;
-            end
-            if (!imgDone && imgPart(j) <= C(k, 2))
-                imgPart(j) = C(k, 2);
-                imgDone = true;
-            end
-            if (realDone && imgDone)
-                break;
-            end
-        end
+        binarySearchQuantization(realPart, C, j);
+        binarySearchQuantization(imgDone, C, j);
     end
     compressed = realPart + i * imgPart;
 end
 
-#function C = calculateQuantization(X, L)
-#    minCoeff = min(X);
-#    maxCoeff = max(X);
-#    step = (maxCoeff - minCoeff) / L;
-#    C = [minCoeff];
-#    for i = 1:L-1
-#        C(i+1) = C(i) + step;
-#    end
-#    abs(C)
-#end
-#
-#function compressed = quantize(coefficients, C)
-#    compressed = coefficients;
-#    for j = 1:length(coefficients)
-#        done = false;
-#        for k = 1:length(C)
-#            if (!done && compressed(j) <= C(k))
-#                done = true;
-#                compressed(j) = C(k);
-#            elseif (done)
-#                break;
-#            end
-#        end
-#    end
-#end
+function binarySearchQuantization(arr, C, j)
+    upper = length(C);
+    lower = 1;
+    index = getIndex(upper, lower);
+    num = arr(j);
+    while true
+        if (index == 1 || (num <= C(index) && C(index - 1) < num))
+            arr(j) = C(index);
+            break;
+        elseif (C(index) > num)
+            upper = index;
+        else
+            lower = index;
+        end
+        index = getIndex(upper, lower);
+    end
+end
+
+function index = getIndex(upper, lower)
+    index = ceil((upper + lower) / 2)
+end

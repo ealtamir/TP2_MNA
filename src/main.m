@@ -15,6 +15,6 @@ end
 function X = addSecondHalfFrequencies(X)
     N = length(X);
     for j = 1:N
-        X(N + j) = conj(X(j));
+        X(2*(N-1) - j) = conj(X(j));
     end
 end
