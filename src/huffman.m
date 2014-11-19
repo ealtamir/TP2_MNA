@@ -11,11 +11,13 @@ function encoding = huffmanEncoding(symbols, weights)
         [j, k] = getTwoWithSmallestWeight(encoded);
         newWeight = encoded{j}.weight + encoded{k}.weight;
         encoded{j} = struct("weight", newWeight, "left", encoded{j}, "right", encoded{k});
+
+        # Borra el otro de la estructura.
         encoded(k, :) = [];
     end
 
     newWeight = encoded{1}.weight + encoded{2}.weight;
-    encoded{1} = struct("weight", newWeight, "left", encoded(1), "right", encoded(2));
+    encoded{1} = struct("weight", newWeight, "left", encoded{1}, "right", encoded{2});
 
     encoding = parseEncodingFromTree(encoded{1}, N);
 end

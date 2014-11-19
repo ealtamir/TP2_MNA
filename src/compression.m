@@ -5,6 +5,9 @@ autoload("fastFourierTransformDivAndConq", "FFT.m");
 
 function X = compressWav(Y, L, E)
     X = fft(Y);
+    plot(abs(X));
+    xlabel("frecuencia");
+    ylabel("Valor absoluto de la senal");
     X = compress(X, L, E);
 end
 
@@ -57,7 +60,14 @@ function level = binarySearchQuantization(C, num)
     lower = 1;
     index = getIndex(upper, lower);
     while true
-        if (index == 1 || index == upper || (num <= C(index) && C(index - 1) < num))
+        if (index == 1 || index == upper)
+            if (num <= C(1))
+                level = C(1);
+            else
+                level = C(index);
+            end
+            break;
+        elseif (num <= C(index) && C(index - 1) < num)
             level = C(index);
             break;
         elseif (num > C(index))
@@ -80,12 +90,9 @@ end
 
 function X = addSecondHalfFrequencies(X)
     N = length(X);
-    doubleN = 2*(N-1);
-    for j = 1:N
+    doubleN = 2 * (N - 1);
+    for j = 1:(N - 1)
         X(doubleN - j) = conj(X(j));
     end
-    # Correción para que coincidan los tamaños de la
-    # señal de entrada y salida.
-    X = [X; 0];
 end
 
