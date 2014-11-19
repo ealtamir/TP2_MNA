@@ -74,14 +74,15 @@ function index = getIndex(upper, lower)
 end
 
 function X = uncompress(X)
-    X = addSecondHalfFrequencies(X);
+    #X = addSecondHalfFrequencies(X);
     X = ifft(X);
+    plot(abs(X))
 end
 
 function X = addSecondHalfFrequencies(X)
     N = length(X);
-    doubleN = 2*N;
-    for j = 1:N-1
+    doubleN = 2*(N-1);
+    for j = 1:N
         X(doubleN - j) = conj(X(j));
     end
     # Correción para que coincidan los tamaños de la
