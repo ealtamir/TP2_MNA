@@ -3,7 +3,7 @@
 autoload("fastFourierTransformDivAndConq", "FFT.m");
 
 
-function X = compressWav(Y, L=16, E=0.1)
+function X = compressWav(Y, L, E)
     X = fft(Y);
     X = compress(X, L, E);
 end
@@ -72,3 +72,20 @@ end
 function index = getIndex(upper, lower)
     index = ceil((upper + lower) / 2);
 end
+
+function X = uncompress(X)
+    X = addSecondHalfFrequencies(X);
+    X = ifft(X);
+end
+
+function X = addSecondHalfFrequencies(X)
+    N = length(X);
+    doubleN = 2*N;
+    for j = 1:N-1
+        X(doubleN - j) = conj(X(j));
+    end
+    # Correción para que coincidan los tamaños de la
+    # señal de entrada y salida.
+    #X = [X; 0];
+end
+

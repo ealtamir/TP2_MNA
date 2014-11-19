@@ -20,21 +20,23 @@ function encoding = huffmanEncoding(symbols, weights)
     encoding = parseEncodingFromTree(encoded{1}, N);
 end
 
-function encoding = parseEncodingFromTree(encoded, N)
+function sortedDict = parseEncodingFromTree(encoded, N)
     encoding = cell(N, 1);
     encoding = treeParser(encoding, encoded, [], 1);
+    sortedIndexes = getSortedIndexes(encoding);
+    sortedDict = sortDict(encoding, sortedIndexes);
 end
 
 function [encoding, next] = treeParser(encoding, tree, bitstring, next)
     if isfield(tree.left, "isLeaf")
-        encoding{next} = struct("symbol", tree.left.symbol, "bitstring", [bitstring, 0]);
+        encoding{next} = [tree.left.symbol, [bitstring, 0]];
         next += 1;
     else
         [encoding, next] = treeParser(encoding, tree.left, [bitstring, 0], next);
     end
 
     if isfield(tree.right, "isLeaf")
-        encoding{next} = struct("symbol", tree.right.symbol, "bitstring", [bitstring, 1]);
+        encoding{next} = [tree.right.symbol, [bitstring, 1]];
         next += 1;
     else
         [encoding, next] = treeParser(encoding, tree.right, [bitstring, 1], next);
@@ -60,4 +62,16 @@ function [b, a] = swap(a, b)
     c = b;
     b = a;
     a = c;
+end
+
+function sortedIndexes = getSortedIndexes(cellArr)
+    sortedIndexes = cellfun(@(x) x.symbol, cellArr);
+    [_, sortedIndexes] = sort(sortedIndexes);
+end
+
+function sortedDict = sortDict(encoding, sortedIndexes)
+    sortedDict = {};
+    for j = 1:length(sortedIndexes)
+        sortedDict{j} = encoding{sortedIndexes(j)}.bitstring;
+    end
 end

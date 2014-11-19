@@ -1,8 +1,10 @@
 1;
 
-function [Y, fs, bps] = loadWav(name)
+function [Y, fileSize] = loadWav(name)
     name = ["../wav/" name ".wav"];
     [Y, fs, bps] = wavread(name);
+    [info, err, msg] = lstat(name);
+    fileSize = info.size;
 end
 
 function writeWav(Y, name)
