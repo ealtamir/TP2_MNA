@@ -16,8 +16,6 @@ function compressedSize = calculateCompressedSize(X, L)
 
     compressedSize = 0;
 
-    dictReal
-
     # Sumo los diccionarios reales y complejos
     for k = 1:length(dictReal)
         compressedSize += length(dictReal{k});

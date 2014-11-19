@@ -14,8 +14,7 @@ function [X, distortion, compressionFactor] = processWav(name, L=16, E=0.1, gene
     if generateWav
         writeWav(U, name);
     end
-    distortion = 0;
-    #distortion = calculateDistortion(Y, U);
+    distortion = calculateDistortion(Y, U);
     compressionFactor = calculateHuffmanCompressionFactor(C, L, fileSize);
 end
 

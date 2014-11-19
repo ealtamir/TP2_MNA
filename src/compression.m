@@ -86,6 +86,6 @@ function X = addSecondHalfFrequencies(X)
     end
     # Correción para que coincidan los tamaños de la
     # señal de entrada y salida.
-    #X = [X; 0];
+    X = [X; 0];
 end
 
