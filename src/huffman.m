@@ -65,13 +65,15 @@ function [b, a] = swap(a, b)
 end
 
 function sortedIndexes = getSortedIndexes(cellArr)
-    sortedIndexes = cellfun(@(x) x.symbol, cellArr);
+    sortedIndexes = cellfun(@(x) x(1), cellArr);
     [_, sortedIndexes] = sort(sortedIndexes);
 end
 
 function sortedDict = sortDict(encoding, sortedIndexes)
     sortedDict = {};
     for j = 1:length(sortedIndexes)
-        sortedDict{j} = encoding{sortedIndexes(j)}.bitstring;
+        # Ignora el primer elementos que es un símbolo y toma
+        # el bitstring que representa su codificacion.
+        sortedDict{j} = encoding{sortedIndexes(j)}(2:end);
     end
 end

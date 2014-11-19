@@ -6,18 +6,17 @@ source("/Users/Enzo/Documents/TP_MNA/src/huffman.m");
 source("/Users/Enzo/Documents/TP_MNA/src/statistics.m");
 
 
-function [X, distortion, compressionFactor] = processWav(name, L=16, E=0.1, writeWav=true)
-    Y = loadWav(name);
-    X = compressWav(Y, L, E);
-    X = uncompress(X);
-    writeWav(X, name);
+function [X, distortion, compressionFactor] = processWav(name, L=16, E=0.1, generateWav=true)
+    [Y, fileSize] = loadWav(name);
+    C = compressWav(Y, L, E);
+
+    U = uncompress(C);
+    if generateWav
+        writeWav(U, name);
+    end
     distortion = 0;
-    compressionFactor = 0;
-    #if writeWav
-    #    writeWav(X, name);
-    #end
-    #distortion = calculateDistortion(Y, X);
-    #compressionFactor = calculateHuffmanCompressionFactor(X, L, fileSize);
+    #distortion = calculateDistortion(Y, U);
+    compressionFactor = calculateHuffmanCompressionFactor(C, L, fileSize);
 end
 
 function plotWithFixedBits(name)

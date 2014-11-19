@@ -11,19 +11,19 @@ function factor = calculateHuffmanCompressionFactor(X, L, fileSize)
 end
 
 function compressedSize = calculateCompressedSize(X, L)
-    c = [real(X); imag(X)];
-    symbols = unique(c);
-    freq = hist(c, symbols);
-    weights = freq / sum(freq);
-    dictReal = huffmanEncoding(symbols(:, 1), weights(:, 1));
-    dictImag = huffmanEncoding(symbols(:, 2), weights(:, 2));
+    [dictReal, realFreq, realSymbols] = generateDictionary(real(X));
+    [dictImag, imgFreq, imagSymbols] = generateDictionary(imag(X));
 
     compressedSize = 0;
 
+    dictReal
+
     # Sumo los diccionarios reales y complejos
-    for k = 1:length(dict)
-        compressedSize += length(dictReal{k}.bitstring);
-        compressedSize += length(dictImag{k}.bitstring);
+    for k = 1:length(dictReal)
+        compressedSize += length(dictReal{k});
+    end
+    for k = 1:length(dictImag)
+        compressedSize += length(dictImag{k});
     end
 
     # Sumo los valores máximos y mínimos. Para reales
@@ -36,8 +36,17 @@ function compressedSize = calculateCompressedSize(X, L)
     # Longitud de L. Entero de 16 bits.
     compressedSize += 16;
 
-    for k = 1:length{symbols}
-        compressedSize += freq(k, 1) * length(dictReal{k});
-        compressedSize += freq(k, 2) * length(dictImag{k});
+    for k = 1:length(realSymbols)
+        compressedSize += realFreq(k) * length(dictReal{k});
     end
+    for k = 1:length(imagSymbols)
+        compressedSize += imgFreq(k) * length(dictImag{k});
+    end
+end
+
+function [dict, freq, symbols] = generateDictionary(X)
+    symbols = unique(X);
+    freq = hist(X, symbols);
+    weights = freq / sum(freq);
+    dict = huffmanEncoding(symbols, weights);
 end

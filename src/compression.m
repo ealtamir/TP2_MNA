@@ -74,9 +74,8 @@ function index = getIndex(upper, lower)
 end
 
 function X = uncompress(X)
-    #X = addSecondHalfFrequencies(X);
+    X = addSecondHalfFrequencies(X);
     X = ifft(X);
-    plot(abs(X))
 end
 
 function X = addSecondHalfFrequencies(X)
