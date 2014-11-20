@@ -1,3 +1,5 @@
 .DS_Store
 src/octave-workspace
 wav
+*.log
+*.aux
