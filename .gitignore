@@ -2,3 +2,4 @@
 src/octave-workspace
 *.log
 *.aux
+*.pdf
