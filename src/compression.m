@@ -1,13 +1,8 @@
 1;
 
-autoload("fastFourierTransformDivAndConq", "FFT.m");
-
 
 function X = compressWav(Y, L, E)
     X = fft(Y);
-    plot(abs(X));
-    xlabel("frecuencia");
-    ylabel("Valor absoluto de la senal");
     X = compress(X, L, E);
 end
 
