@@ -44,7 +44,6 @@ realiza un estudio comparativo de diferentes niveles de cuantificación y sus
 efectos tanto en el tamaño como la calidad - en términos de distorción - del
 archivo comprimido.
 \end{abstract}
-\newpage
 \section{Palabras Clave}
 Transformada Rápida de Fourier, Compresión de voz, Codificación de Huffman
 \newpage
@@ -152,53 +151,35 @@ de sonido descomprimido, similar al original (no idéntico, debido al descarte d
 valores y aproximaciones). Notar que si efectivamente se realiza la
 codificación de Huffman, se requieren los tres parámetros mencionados
 previamente durante la cuantificación, para la decodificación.
+\section{Resultados}
+A continuación se presentan comparaciones de diferentes archivos de audio, con
+su tamaño original, tamaño comprimido, razón de compresión, y distorción.
+\begin{center}
+    \begin{tabular}{| c | c | c | c | c |}
+        \hline
+        Archivo & Tamaño (bytes) & Tamaño comprimido (bytes) & Compresión (\%) &  Distorción \\ \hline
+        p1.wav & 64700 & 7726 & 0.11941 & 9.4042e-04 \\
+        p2.wav & 156684 & 21617 & 0.13797 & 8.6123e-05 \\
+        p3.wav & 47404 & 6793 & 0.14328 & 2.6806e-04 \\
+        p4.wav & 39468 & 5358 & 0.13574 & 2.8885e-05 \\
+        p5.wav & 36644 & 4420 & 0.12062 & 1.8816e-04 \\
+        p6.wav & 36644 & 4796 & 0.13086 & 6.1311e-04 \\
+        p7.wav & 52748 & 5707 & 0.10818 & 7.0363e-04 \\
+        p8.wav & 45428 & 6159 & 0.13556 & 3.1064e-04 \\
+        p9.wav & 52748 & 5499 & 0.10424 & 7.9479e-04 \\
+        p10.wav & 46892 & 4749 & 0.10127 & 1.0548e-03 \\
+        \hline
+    \end{tabular}
+\end{center}
+
+\includegraphics[scale=0.8]{compresion_media_fixed_bits.png}
+\includegraphics[scale=0.8]{compresion_media_fixed_epsilon.png}
+\includegraphics[scale=0.8]{distorcion_media_fixed_bits.png}
+\includegraphics[scale=0.8]{distorcion_media_fixed_epsilon.png}
+\includegraphics[scale=0.8]{signal_with_compression.png}
+\includegraphics[scale=0.8]{signal_without_compression.png}
 \section{Conclusiones}
 \newpage
 \section{Bibliograf\'ia}
 G. Rajesh, A. Kumar, K. Ranjeet. Speech Compression using Different Transform Techniques.
 \end{document}
-
-\begin{comment}
-    [1,1] =
-
-        9.4042e-04   1.1941e-01   6.1805e+04
-
-        [1,2] =
-
-        8.6123e-05   1.3797e-01   1.7294e+05
-
-        [1,3] =
-
-        2.6806e-04   1.4328e-01   5.4338e+04
-
-        [1,4] =
-
-        2.8885e-05   1.3574e-01   4.2858e+04
-
-        [1,5] =
-        [1,5] =
-        [1,5] =
-
-        1.8816e-04   1.2062e-01   3.5359e+04
-
-        [1,6] =
-
-        6.1311e-04   1.3086e-01   3.8362e+04
-
-        [1,7] =
-
-        7.0363e-04   1.0818e-01   4.5650e+04
-
-        [1,8] =
-
-        3.1064e-04   1.3556e-01   4.9267e+04
-
-        [1,9] =
-
-        7.9479e-04   1.0424e-01   4.3988e+04
-
-        [1,10] =
-
-        1.0548e-03   1.0127e-01   3.7991e+04
-}
-\end{comment}
