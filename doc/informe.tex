@@ -84,13 +84,13 @@ de diferentes personas, pronunciando desde palabras individuales, a frases más
 elaboradas. Las mismas se almacenaron en el formato sin compresión WAV, con un
 solo canal de audio (mono), y una frecuencia de muestreo de $8$ Khz.
 \subsubsection{Obtención de la señal de los wav}
-Para obtener la señal de los archivos se utilizó la función \verbatim+wavread+ de octave,
+Para obtener la señal de los archivos se utilizó la función wavread de octave,
 la cual dado un archivo de audio mono, retorna un vector con las muestras.
 \subsubsection{Transformada de Fourier y truncado}
-En base a la función \verbatim+fft+ de octave, se calculó la Transformada Rápida de
-Fourier de cada archivo, obteniendo la señal en frecuencia a comprimir.
+En base a la función fft de octave, se calculó la transformada rápida de
+Fourier a cada archivo, obteniendo la señal en frecuencia a comprimir.
 Debido a que la señal de audio de un wav es real, se pudo truncar el vector
-obtenido de la \verbatim+fft+, conservando solo la mitad más uno de los valores. Esto se
+obtenido de la fft, conservando solo la mitad más uno de los valores. Esto se
 debe a que, sea $X[n]$ una función discreta tal que $X[n] \in
 \mathbb{R}$, y sea $N$ el número de muestras totales, entonces:
 \begin{equation} \label{eq1}
@@ -113,7 +113,7 @@ Luego:
 Para cierto valor $\epsilon$ que se fue variando arbitrariamente, se reemplazó
 los valores de $\hat{X}[k]$ tales que $|\hat{X}[k]| < \epsilon$, por cero. \\
 Esto permitió reducir el tamaño final mejorando el proceso de compresión,
-eliminando señales débiles que poco aportan al sonido en su totalidad.
+eliminando señales debiles que poco aportan al sonido en su totalidad.
 \subsection{Cuantificación y ``thresholding''}
 Cuantificar una señal implica asociar (``mappear'') el conjunto de valores de la
 misma a uno menor. Esto, como es de esperarse, tiene la finalidad de
@@ -126,9 +126,9 @@ cuantificación lineal, donde el paso $\Delta$ de la misma se obtienen
 mediante la fórmula:
 $$\Delta = \left(\frac{M_{max} - M_{min}}{L}\right)$$
 Siendo $M_{max}$ el máximo valor en el vector de señales, $M_{min}$ el mínimo,
-y $L$ el nivel de cuantificación deseado.
+y L el nivel de cuantificación deseado.
 Estos tres valores deben ser almacenados en el archivo comprimido, ya que
-aportan información necesaria para la descompresión (en otras palabras, se
+aportan información necesaria para la decompresión (en otras palabras, se
 requieren para revertir la codificación de Huffman, mencionada en la próxima
 sección).
 \subsection{Codificación de Huffman}
@@ -137,15 +137,15 @@ secuencia de bits a cada valor, en base a la frecuencia con que aparece cada
 uno. Es decir, aquellos valores con mayor frecuencia son asignados las
 secuencias más cortas, codificando de manera eficiente la información y
 reduciendo su tamaño.
-Para nuestro caso particular, evitamos guardar los archivos codificados en sí,
+Para nuestro caso particular, evitamos guardar los archivos codificados en si,
 pero calculamos la misma para saber cuanto ocuparía la versión final
 comprimida.
 \subsection{Reconstrucción de la señal}
-Para reconstruir la señal original desde el archivo cuantificado, se aplican los
+Para reconstruir la señal original desde el archivo cuantificado, se aplica los
 procesos inversos. En base a la propiedad mencionada anteriormente por la cual
 se pudo descartar la mitad menos uno de los valores, se vuelve a generar los
-faltantes, y al vector obtenido se le aplica la función inversa (\verbatim+ifft+
-en octave), que, utilizando la antitransformada de Fourier, se genera un archivo
+faltantes, y al vector obtenido se le aplica la función inversa (ifft en
+octave), que, utilizando la antitransformada de Fourier, se genera un archivo
 de sonido descomprimido, similar al original (no idéntico, debido al descarte de
 valores y aproximaciones). Notar que si efectivamente se realiza la
 codificación de Huffman, se requieren los tres parámetros mencionados
@@ -167,6 +167,26 @@ su tamaño original, tamaño comprimido, razón de compresión, y distorción.
         p8.wav & 45428 & 6159 & 0.13556 & 3.1064e-04 \\
         p9.wav & 52748 & 5499 & 0.10424 & 7.9479e-04 \\
         p10.wav & 46892 & 4749 & 0.10127 & 1.0548e-03 \\
+        p11.wav & 29532 & 3798 & 0.12859 & 1.5450e-03 \\
+        p12.wav & 36638 & 4123 & 0.11252 & 1.9993e-04 \\
+        p13.wav & 28280 & 3039 & 0.10744 & 7.5817e-04\\
+        p14.wav & 31994 & 4433 & 0.13855 & 2.9970e-04\\
+        p15.wav & 24564 & 2957 & 0.12034 & 2.8484e-04 \\
+        p16.wav & 24750 & 3764 & 0.15205 & 4.0124e-04\\
+        p17.wav & 23564 & 2611 & 0.11078 & 2.2699e-04\\
+        p18.wav & 33132 & 4109 & 0.12400 & 2.0743e-04 \\
+        p19.wav & 31580 & 3889 & 0.12314 & 3.7458e-04\\
+        p20.wav & 44086 & 6243 & 0.14161 & 2.0671e-04\\
+        p21.wav & 31994 & 4612 & 0.11534 & 2.0510e-04\\
+        p22.wav & 35740 & 5858 & 0.16390 & 2.7977e-04\\
+        p23.wav & 26428 & 4418 & 0.16714 & 4.5768e-04\\
+        p24.wav & 24875 & 3589 & 0.14427 & 6.2918e-04\\
+        p25.wav & 32636 & 4051 & 0.12411 & 7.1053e-04\\
+        p26.wav & 26428 & 3104 & 0.11743 & 2.0185e-03\\
+        p27.wav & 40396 & 4510 & 0.11164 & 9.7388e-04\\
+        p28.wav & 40396 & 5795 & 0.14345 & 1.7631e-03\\
+        p29.wav & 32636 & 5361 & 0.16425 & 4.5588e-04\\
+        p30.wav & 32636 & 3716 & 0.11384 & 1.0736e-03\\
         \hline
     \end{tabular}
 \end{center}
@@ -207,3 +227,4 @@ bajas.
 \section{Bibliograf\'ia}
 G. Rajesh, A. Kumar, K. Ranjeet. Speech Compression using Different Transform Techniques.
 \end{document}
+

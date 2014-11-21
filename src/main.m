@@ -56,7 +56,7 @@ function plotWithFixedEpsilon(name, epsilon=0.1, maxL=8)
     print -dpng -color "./plots/compresion_media_fixed_epsilon.png";
 end
 
-function [info] = generateCompressedWavFiles()
+function [info] = generateProcessedWavFiles()
     info = {};
     for i = 1:30
         [_, distortion, compressionFactor, compressedSizeInBits] = processWav(strcat("p", num2str(i)));
