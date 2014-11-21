@@ -86,13 +86,13 @@ de diferentes personas, pronunciando desde palabras individuales, a frases más
 elaboradas. Las mismas se almacenaron en el formato sin compresión WAV, con un
 solo canal de audio (mono), y una frecuencia de muestreo de $8$ Khz.
 \subsubsection{Obtención de la señal de los wav}
-Para obtener la señal de los archivos se utilizó la función wavread de octave,
+Para obtener la señal de los archivos se utilizó la función \verbatim+wavread+ de octave,
 la cual dado un archivo de audio mono, retorna un vector con las muestras.
 \subsubsection{Transformada de Fourier y truncado}
-En base a la función fft de octave, se calculó la transformada rápida de
-Fourier a cada archivo, obteniendo la señal en frecuencia a comprimir.
+En base a la función \verbatim+fft+ de octave, se calculó la Transformada Rápida de
+Fourier de cada archivo, obteniendo la señal en frecuencia a comprimir.
 Debido a que la señal de audio de un wav es real, se pudo truncar el vector
-obtenido de la fft, conservando solo la mitad más uno de los valores. Esto se
+obtenido de la \verbatim+fft+, conservando solo la mitad más uno de los valores. Esto se
 debe a que, sea $X[n]$ una función discreta tal que $X[n] \in
 \mathbb{R}$, y sea $N$ el número de muestras totales, entonces:
 \begin{equation} \label{eq1}
@@ -115,7 +115,7 @@ Luego:
 Para cierto valor $\epsilon$ que se fue variando arbitrariamente, se reemplazó
 los valores de $\hat{X}[k]$ tales que $|\hat{X}[k]| < \epsilon$, por cero. \\
 Esto permitió reducir el tamaño final mejorando el proceso de compresión,
-eliminando señales debiles que poco aportan al sonido en su totalidad.
+eliminando señales débiles que poco aportan al sonido en su totalidad.
 \subsection{Cuantificación y ``thresholding''}
 Cuantificar una señal implica asociar (``mappear'') el conjunto de valores de la
 misma a uno menor. Esto, como es de esperarse, tiene la finalidad de
@@ -128,9 +128,9 @@ cuantificación lineal, donde el paso $\Delta$ de la misma se obtienen
 mediante la fórmula:
 $$\Delta = \left(\frac{M_{max} - M_{min}}{L}\right)$$
 Siendo $M_{max}$ el máximo valor en el vector de señales, $M_{min}$ el mínimo,
-y L el nivel de cuantificación deseado.
+y $L$ el nivel de cuantificación deseado.
 Estos tres valores deben ser almacenados en el archivo comprimido, ya que
-aportan información necesaria para la decompresión (en otras palabras, se
+aportan información necesaria para la descompresión (en otras palabras, se
 requieren para revertir la codificación de Huffman, mencionada en la próxima
 sección).
 \subsection{Codificación de Huffman}
@@ -139,15 +139,15 @@ secuencia de bits a cada valor, en base a la frecuencia con que aparece cada
 uno. Es decir, aquellos valores con mayor frecuencia son asignados las
 secuencias más cortas, codificando de manera eficiente la información y
 reduciendo su tamaño.
-Para nuestro caso particular, evitamos guardar los archivos codificados en si,
+Para nuestro caso particular, evitamos guardar los archivos codificados en sí,
 pero calculamos la misma para saber cuanto ocuparía la versión final
 comprimida.
 \subsection{Reconstrucción de la señal}
-Para reconstruir la señal original desde el archivo cuantificado, se aplica los
+Para reconstruir la señal original desde el archivo cuantificado, se aplican los
 procesos inversos. En base a la propiedad mencionada anteriormente por la cual
 se pudo descartar la mitad menos uno de los valores, se vuelve a generar los
-faltantes, y al vector obtenido se le aplica la función inversa (ifft en
-octave), que, utilizando la antitransformada de Fourier, se genera un archivo
+faltantes, y al vector obtenido se le aplica la función inversa (\verbatim+ifft+
+en octave), que, utilizando la antitransformada de Fourier, se genera un archivo
 de sonido descomprimido, similar al original (no idéntico, debido al descarte de
 valores y aproximaciones). Notar que si efectivamente se realiza la
 codificación de Huffman, se requieren los tres parámetros mencionados
