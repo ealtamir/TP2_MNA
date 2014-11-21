@@ -58,24 +58,9 @@ end
 
 function [info] = generateCompressedWavFiles()
     info = {};
-    [_, a, b, c] = processWav("p1");
-    info{1} = [a, b, c/8];
-    [_, a, b, c] = processWav("p2");
-    info{2} = [a, b, c/8];
-    [_, a, b, c] = processWav("p3");
-    info{3} = [a, b, c/8];
-    [_, a, b, c] = processWav("p4");
-    info{4} = [a, b, c/8];
-    [_, a, b, c] = processWav("p5");
-    info{5} = [a, b, c/8];
-    [_, a, b, c] = processWav("p6");
-    info{6} = [a, b, c/8];
-    [_, a, b, c] = processWav("p7");
-    info{7} = [a, b, c/8];
-    [_, a, b, c] = processWav("p8");
-    info{8} = [a, b, c/8];
-    [_, a, b, c] = processWav("p9");
-    info{9} = [a, b, c/8];
-    [_, a, b, c] = processWav("p10");
-    info{10} = [a, b, c/8];
+    for i = 1:30
+        [_, distortion, compressionFactor, compressedSizeInBits] = processWav(strcat("p", num2str(i)));
+        compressedSizeInBytes = compressedSizeInBits / 8;
+        info{i} = [distortion, compressionFactor, compressedSizeInBytes];
+    end
 end
