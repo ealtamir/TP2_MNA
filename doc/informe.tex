@@ -44,7 +44,7 @@ realiza un estudio comparativo de diferentes niveles de cuantificación y sus
 efectos tanto en el tamaño como la calidad - en términos de distorción - del
 archivo comprimido.
 \end{abstract}
-\section{Palabras Clave}
+\section*{Palabras Clave}
 Transformada Rápida de Fourier, Compresión de voz, Codificación de Huffman
 \newpage
 \section{Introducci\'on}
@@ -73,7 +73,6 @@ manera que se reduzca el tamaño necesario.\\
 Como se verá más adelante, una reducción en la distorición y aumento en la
 fidelidad del audio comprimido implican la necesidad de mayor información, y
 por ende, una menor reducción en relación al tamaño (en bytes) original.
-\newpage
 \section{Metodolog\'ia}
 \begin{comment}
 [Hay que relatar los pasos que se fueron realizando, incluyendo los modelos
@@ -105,9 +104,9 @@ Donde se usa la notación $((a))_b$ para denotar $a$ módulo $b$.
 Luego:
 \begin{equation} \label{eq2}
     \begin{split}
-        \hat{X}[k] & = \hat{X}[N-k] \\
-        \hat{X}[\frac{N}{2}] & = \hat{X}[N-\frac{N}{2}] \\
-        \hat{X}[\frac{N}{2}+1] & = \hat{X}[N-\frac{N}{2}+1] \\
+        \hat{X}[k] & = \overline{\hat{X}[N-k]} \\
+        %\hat{X}[\frac{N}{2}] & = \overline{\hat{X}[N-\frac{N}{2}]} \\
+        \hat{X}[\frac{N}{2}+1] & = \overline{\hat{X}[N-\frac{N}{2}+1]} \\
      \end{split}
 \end{equation}
 \subsubsection{Eliminación de coeficientes próximos a cero}
@@ -155,7 +154,7 @@ previamente durante la cuantificación, para la decodificación.
 A continuación se presentan comparaciones de diferentes archivos de audio, con
 su tamaño original, tamaño comprimido, razón de compresión, y distorción.
 \begin{center}
-    \begin{tabular}{| c | c | c | c | c |}
+    \begin{tabular}{c | c | c | c | c}
         \hline
         Archivo & Tamaño (bytes) & Tamaño comprimido (bytes) & Compresión (\%) &  Distorción \\ \hline
         p1.wav & 64700 & 7726 & 0.11941 & 9.4042e-04 \\
@@ -179,6 +178,31 @@ su tamaño original, tamaño comprimido, razón de compresión, y distorción.
 \includegraphics[scale=0.8]{signal_with_compression.png}
 \includegraphics[scale=0.8]{signal_without_compression.png}
 \section{Conclusiones}
+En primera instancia, el proceso de cuantificación involucraba identificar para
+cada componente del vector de frecuencias, el nivel de cuantificación al que
+pertenecía, de manera tal que en el vector cualificado se le asignara ese nivel
+a la componente. Para hacer esto se utilizó dos bucles sencillos, donde se
+iteraba sobre todas las componentes y para cada una, se volvía a iterar sobre
+el vector con los niveles de cuantificación. La complejidad de este algoritmo
+es $O(nm)$, donde $n$ es la cantidad de componentes del vector de frecuencias y
+$m$ está dado por $2^{L}$. Como $n$ es usualmente un número bastante grande(En
+nuestros ejemplos, al rededor de unas 30000 muestras), resultó que el algoritmo
+tenía un tiempo de ejecución demasiado elevado. Por este motivo, se decidió
+implementar la búsqueda del nivel de cuantificación utilizando búsqueda
+binaria. A través de este nuevo algoritmo, se logró bajar la complejidad a
+$O(n\log m)$, lo cual se tradujo en niveles aceptables de tiempos de ejecución.
+
+En los archivos procesados que se obtienen como resultado de aplicar la
+antitransformada a las frecuencias cuantificadas, puede notarse que hay una
+reducción significativa del volumen precisamente en el medio de la
+reproducción. Esta anomalía se da como resultado de la compresión. En el
+siguiente gráfico puede notarse como las frecuencias con menor valor absoluto,
+se encuentran aproximadamente en la mitad del rango de frecuencias.
+Al eliminar las señales dbiles y cuantificarlas, la información de estas
+frecuencias se pierde. Esto produce que ocurre la anomalía antes mencionada.
+Para poder solucionar este problema, es necesario utilizar un nivel de
+cuantificación lo suficientemente alto, como para no cancelar estas frecuencias
+bajas.
 \newpage
 \section{Bibliograf\'ia}
 G. Rajesh, A. Kumar, K. Ranjeet. Speech Compression using Different Transform Techniques.
