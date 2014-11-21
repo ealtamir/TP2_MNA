@@ -39,13 +39,15 @@ M\'etodos Num\'ericos Avanzados}
 \renewcommand{\abstractname}{Resumen}
 \begin{abstract}
 El siguiente informe explora el uso de la transformada rápida de Fourier, en
-combinación con la codificación de Huffman para la compresión de voz. Se
-realiza un estudio comparativo de diferentes niveles de cuantificación y sus
-efectos tanto en el tamaño como la calidad - en términos de distorción - del
-archivo comprimido.
+combinación con la codificación de Huffman para la compresión de voz en formato
+wav, en conjunto con otras técnicas como el truncado, cuantificación lineal y
+\textit{thresholding}, con el fin de aumentar la eficacia de la compresión.
+%Se realiza un estudio comparativo de diferentes niveles de cuantificación y sus
+%efectos tanto en el tamaño como la calidad - en términos de distorción - del
+%archivo comprimido.
+\\[5pt]
+\noindent \textbf{Keywords.} Transformada Rápida de Fourier, Compresión de voz, Codificación de Huffman
 \end{abstract}
-\section*{Palabras Clave}
-Transformada Rápida de Fourier, Compresión de voz, Codificación de Huffman
 \newpage
 \section{Introducci\'on}
 \begin{comment}
@@ -59,9 +61,9 @@ encuentra en frencuencias de entre $80$ a $1100$ Hz.  Teniendo esto en cuenta,
 a la hora de almacenar digitalmente una señal de voz, es posible utilizar
 métodos para reducir el tamaño necesario para guardar la información
 correspondiente a esta señal.\\
-Tradicionalmente estos se dividen en dos. Por un lado métodos "lossless" (sin
+Tradicionalmente estos se dividen en dos. Por un lado métodos ``lossless'' (sin
 pérdida), es decir, métodos que almacenan la información de modo tal que esta
-pueda ser recuperada en su totalidad. Por otro, métodos "lossy" (con pérdida),
+pueda ser recuperada en su totalidad. Por otro, métodos ``lossy'' (con pérdida),
 en los cuales, tomando ventaja de que el rango de audición humano suele
 situarse entre los $20$ y $20.000$ Hz (con variaciones de individuo a
 individuo), descartan información considerada redundante (aquella por encima o
@@ -70,29 +72,41 @@ Aquí exploramos una forma de lograr lo segundo, mediante el uso de la
 transformada rápida de Fourier, en conjunto con la codificación de Huffman,
 para lograr almacenar diferentes archivos de sonidos conteniendo voces, de
 manera que se reduzca el tamaño necesario.\\
-Como se verá más adelante, una reducción en la distorición y aumento en la
-fidelidad del audio comprimido implican la necesidad de mayor información, y
-por ende, una menor reducción en relación al tamaño (en bytes) original.
+En primer lugar, se explica la metodología seguida, desde la grabación
+inicial de las diferentes pruebas, pasando por las diferentes etapas hasta
+llegar a la versión comprimida, y luego el camino inverso para descomprimir el
+archivo generado y poder reproducirlo.
+Seguido de esto, se presentan los resultados obtenidos, realizando una
+comparación entre los archivos originales y sus correspondientes pares
+comprimidos, además de análisis sobre el efecto de varias ciertas variables del
+problema en cuestión.
+Por último, se describen las conclusiones obtenidas.
+
+%Como se verá más adelante, una reducción
+%en la distorición y aumento en la fidelidad del audio comprimido implican la
+%necesidad de mayor información, y por ende, una menor reducción en relación al
+%tamaño (en bytes) original.
 \section{Metodolog\'ia}
 \begin{comment}
 [Hay que relatar los pasos que se fueron realizando, incluyendo los modelos
 utilizados, los analisis hechos, las pruebas realizadas.]
 \end{comment}
-\subsubsection{Grabación de voz\'on}
+\subsection{Grabación de voz}
 Mediante el programa Audacity\textsuperscript{TM}, se grabaron treinta muestras
 de diferentes personas, pronunciando desde palabras individuales, a frases más
 elaboradas. Las mismas se almacenaron en el formato sin compresión WAV, con un
 solo canal de audio (mono), y una frecuencia de muestreo de $8$ Khz.
-\subsubsection{Obtención de la señal de los wav}
+\subsection{Obtención de la señal de los wav}
 Para obtener la señal de los archivos se utilizó la función wavread de octave,
-la cual dado un archivo de audio mono, retorna un vector con las muestras.
-\subsubsection{Transformada de Fourier y truncado}
+la cual dado un archivo de audio mono, retorna un vector con las diferentes
+muestras.
+\subsection{Transformada rápida de Fourier y truncado}
 En base a la función fft de octave, se calculó la transformada rápida de
 Fourier a cada archivo, obteniendo la señal en frecuencia a comprimir.
 Debido a que la señal de audio de un wav es real, se pudo truncar el vector
 obtenido de la fft, conservando solo la mitad más uno de los valores. Esto se
-debe a que, sea $X[n]$ una función discreta tal que $X[n] \in
-\mathbb{R}$, y sea $N$ el número de muestras totales, entonces:
+debe a que, si $X[n]$ es una función discreta tal que $X[n] \in
+\mathbb{R}$, y llamando $N$ el número de muestras totales, entonces:
 \begin{equation} \label{eq1}
     \begin{split}
         \hat{X}[k] & = \hat{X}[((-k))_N] \\
@@ -109,12 +123,12 @@ Luego:
         \hat{X}[\frac{N}{2}+1] & = \overline{\hat{X}[N-\frac{N}{2}+1]} \\
      \end{split}
 \end{equation}
-\subsubsection{Eliminación de coeficientes próximos a cero}
+\subsection{Eliminación de coeficientes próximos a cero (``thresholding'')}
 Para cierto valor $\epsilon$ que se fue variando arbitrariamente, se reemplazó
 los valores de $\hat{X}[k]$ tales que $|\hat{X}[k]| < \epsilon$, por cero. \\
 Esto permitió reducir el tamaño final mejorando el proceso de compresión,
 eliminando señales debiles que poco aportan al sonido en su totalidad.
-\subsection{Cuantificación y ``thresholding''}
+\subsection{Cuantificación}
 Cuantificar una señal implica asociar (``mappear'') el conjunto de valores de la
 misma a uno menor. Esto, como es de esperarse, tiene la finalidad de
 reducir el tamaño final del archivo comprimido. Existen varios métodos de
@@ -128,7 +142,7 @@ $$\Delta = \left(\frac{M_{max} - M_{min}}{L}\right)$$
 Siendo $M_{max}$ el máximo valor en el vector de señales, $M_{min}$ el mínimo,
 y L el nivel de cuantificación deseado.
 Estos tres valores deben ser almacenados en el archivo comprimido, ya que
-aportan información necesaria para la decompresión (en otras palabras, se
+aportan información necesaria para la descompresión (en otras palabras, se
 requieren para revertir la codificación de Huffman, mencionada en la próxima
 sección).
 \subsection{Codificación de Huffman}
@@ -138,7 +152,7 @@ uno. Es decir, aquellos valores con mayor frecuencia son asignados las
 secuencias más cortas, codificando de manera eficiente la información y
 reduciendo su tamaño.
 Para nuestro caso particular, evitamos guardar los archivos codificados en si,
-pero calculamos la misma para saber cuanto ocuparía la versión final
+pero calculamos la codificación para saber cuanto ocuparía la versión final
 comprimida.
 \subsection{Reconstrucción de la señal}
 Para reconstruir la señal original desde el archivo cuantificado, se aplica los
@@ -152,7 +166,7 @@ codificación de Huffman, se requieren los tres parámetros mencionados
 previamente durante la cuantificación, para la decodificación.
 \section{Resultados}
 A continuación se presentan comparaciones de diferentes archivos de audio, con
-su tamaño original, tamaño comprimido, razón de compresión, y distorción.
+su tamaño original, tamaño comprimido, razón de compresión, y distorción. Los cálculos fueron realizados tomando un $\epsilon = 0.1$ y $L = 4$
 \begin{center}
     \begin{tabular}{c | c | c | c | c}
         \hline
@@ -191,6 +205,14 @@ su tamaño original, tamaño comprimido, razón de compresión, y distorción.
     \end{tabular}
 \end{center}
 
+Como se puede observar, las compresiones más bajas rondan cerca de un $17\%$
+del tamaño original, mientras que las más altas se aproximan a un $10\%$.
+Además, las distorciones se hallan en ordenes de magnitud de $10^{-3}$ y hasta
+$10^{-5}$. Esto resulta en ganancias significativas a la hora de almacenar los
+datos, transmitirlos por canales lentos, o en situaciones que se requiera
+tiempos de respuesta cercanos al tiempo real, como en aplicaciones de
+videoconferencia o telefonía.
+
 \includegraphics[scale=0.8]{compresion_media_fixed_bits.png}
 \includegraphics[scale=0.8]{compresion_media_fixed_epsilon.png}
 \includegraphics[scale=0.8]{distorcion_media_fixed_bits.png}
@@ -198,7 +220,17 @@ su tamaño original, tamaño comprimido, razón de compresión, y distorción.
 \includegraphics[scale=0.8]{signal_with_compression.png}
 \includegraphics[scale=0.8]{signal_without_compression.png}
 \section{Conclusiones}
-En primera instancia, el proceso de cuantificación involucraba identificar para
+La transformada rápida de Fourier resulta una buena introducción didáctica al
+problema de compresión de señales, en parte debido a que utilizando funciones
+de librería, uno puede evitar perderse en los detalles de implementación y
+concentrarse en el asunto en cuestión. \\
+A su vez, es claro cómo, la codificación de Huffman, siendo óptima para la
+codificación de señales, resulta tan usada tanto en procesamiento de voz,
+imagenes, y varios otros ambitos: las gananciasen tamaño logradas, en conjunto
+con su relativamente sencillo planteo e implementación, lo tornan en una de las
+elecciones principales. \\
+
+Con respecto al proceso de cuantificación, este involucró identificar para
 cada componente del vector de frecuencias, el nivel de cuantificación al que
 pertenecía, de manera tal que en el vector cualificado se le asignara ese nivel
 a la componente. Para hacer esto se utilizó dos bucles sencillos, donde se
@@ -219,12 +251,12 @@ reproducción. Esta anomalía se da como resultado de la compresión. En el
 siguiente gráfico puede notarse como las frecuencias con menor valor absoluto,
 se encuentran aproximadamente en la mitad del rango de frecuencias.
 Al eliminar las señales dbiles y cuantificarlas, la información de estas
-frecuencias se pierde. Esto produce que ocurre la anomalía antes mencionada.
+frecuencias se pierde. Esto produce que ocurra la anomalía antes mencionada.
 Para poder solucionar este problema, es necesario utilizar un nivel de
 cuantificación lo suficientemente alto, como para no cancelar estas frecuencias
 bajas.
 \newpage
 \section{Bibliograf\'ia}
-G. Rajesh, A. Kumar, K. Ranjeet. Speech Compression using Different Transform Techniques.
+G. Rajesh, A. Kumar, K. Ranjeet. 2011. Speech Compression using Different Transform Techniques.
 \end{document}
 
