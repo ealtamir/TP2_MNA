@@ -6,7 +6,8 @@ source("./src/huffman.m");
 source("./src/statistics.m");
 
 
-function [C, distortion, compressionFactor] = processWav(name, L=16, E=0.1, generateWav=true)
+
+function [C, distortion, compressionFactor, compressedSize] = processWav(name, L=16, E=0.1, generateWav=true)
     [Y, fileSizeInBits] = loadWav(name);
     C = compressWav(Y, L, E);
 
@@ -15,7 +16,7 @@ function [C, distortion, compressionFactor] = processWav(name, L=16, E=0.1, gene
         writeWav(U, name);
     end
     distortion = calculateDistortion(Y, U);
-    compressionFactor = calculateHuffmanCompressionFactor(C, L, fileSize);
+    [compressionFactor, compressedSize] = calculateHuffmanCompressionFactor(C, L, fileSizeInBits);
 end
 
 function plotWithFixedBits(name, epsilon=0.1, L=4)
@@ -53,4 +54,28 @@ function plotWithFixedEpsilon(name, epsilon=0.1, maxL=8)
     xlabel("Bits de Cuantificacion (L)");
     ylabel("Compresion (porcentaje del tamano original)");
     print -dpng -color "./plots/compresion_media_fixed_epsilon.png";
+end
+
+function [info] = generateCompressedWavFiles()
+    info = {};
+    [_, a, b, c] = processWav("p1");
+    info{1} = [a, b, c];
+    [_, a, b, c] = processWav("p2");
+    info{2} = [a, b, c];
+    [_, a, b, c] = processWav("p3");
+    info{3} = [a, b, c];
+    [_, a, b, c] = processWav("p4");
+    info{4} = [a, b, c];
+    [_, a, b, c] = processWav("p5");
+    info{5} = [a, b, c];
+    [_, a, b, c] = processWav("p6");
+    info{6} = [a, b, c];
+    [_, a, b, c] = processWav("p7");
+    info{7} = [a, b, c];
+    [_, a, b, c] = processWav("p8");
+    info{8} = [a, b, c];
+    [_, a, b, c] = processWav("p9");
+    info{9} = [a, b, c];
+    [_, a, b, c] = processWav("p10");
+    info{10} = [a, b, c];
 end

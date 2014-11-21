@@ -1,11 +1,20 @@
 1;
 
 function X = calculateDistortion(original, compressed)
+    # A veces un vector tiene un elemento más
+    lenOrg = length(original);
+    lenCom = length(compressed);
+    if (lenOrg > lenCom)
+        original = original(1:lenCom);
+    elseif (lenOrg < lenCom)
+        lenCom = lenCom(1:lenOrg);
+    end
+
     X = (real(original) - real(compressed)).^2;
     X = sum(X) / length(X);
 end
 
-function factor = calculateHuffmanCompressionFactor(X, L, fileSize)
+function [factor, compressedSize] = calculateHuffmanCompressionFactor(X, L, fileSize)
     compressedSize = calculateCompressedSize(X, L);
     factor = compressedSize / fileSize;
 end

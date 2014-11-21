@@ -8,6 +8,6 @@ function [Y, fileSize] = loadWav(name)
 end
 
 function writeWav(Y, name)
-    wavwrite(Y, ["./wav/" name "_COMPRESSED.wav"]);
-    ["Wav file written with name: " name "_COMPRESSED.wav"]
+    wavwrite(Y, ["./wav/" name "_processed.wav"]);
+    ["Wav file written with name: " name "_processed.wav"]
 end
